@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function Home() {
   const [teachers, setTeachers] = useState([]);
@@ -124,7 +125,13 @@ function Home() {
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
             School Scheduling System
           </h1>
-          <p className="text-gray-600">Manage classes and teachers</p>
+          <p className="text-gray-600 mb-4">Manage classes and teachers</p>
+          <Link
+            to="/Timetable"
+            className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 shadow-md hover:shadow-lg"
+          >
+            View Timetable
+          </Link>
         </div>
 
         {/* Main Content Grid */}

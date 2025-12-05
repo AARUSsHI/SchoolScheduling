@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useEffect, useState, useCallback } from "react";
 import {
   DndContext,
@@ -16,8 +17,6 @@ const PERIODS = [
   "09:45-10:30",
   "10:30-11:15",
   "11:45-12:30",
-  "12:30-13:15",
-  "13:15-14:30",
 ];
 
 function TeacherCard({ teacher }) {
@@ -121,13 +120,13 @@ function Timetable() {
   const [teachers, setTeachers] = useState([]);
   const [selectedClassId, setSelectedClassId] = useState("");
   const [timetableEntries, setTimetableEntries] = useState([]);
-  const [activeId, setActiveId] = useState(null);
   const [draggedTeacher, setDraggedTeacher] = useState(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        delay: 100,
+        tolerance: 5,
       },
     })
   );
@@ -185,7 +184,6 @@ function Timetable() {
 
   const handleDragStart = (event) => {
     const { active } = event;
-    setActiveId(active.id);
     const teacher = teachers.find((t) => t._id === active.id);
     setDraggedTeacher(teacher);
   };
@@ -193,7 +191,6 @@ function Timetable() {
   const handleDragEnd = async (event) => {
     const { active, over } = event;
 
-    setActiveId(null);
     setDraggedTeacher(null);
 
     // No drop target → exit safely
@@ -306,44 +303,46 @@ function Timetable() {
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Teachers Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-lg p-6 sticky top-4">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4 pb-3 border-b-2 border-purple-500">
-                Teachers
-              </h2>
-              <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
-                {teachers.length === 0 ? (
-                  <p className="text-gray-500 text-center py-4 text-sm">
-                    No teachers available
-                  </p>
-                ) : (
-                  teachers.map((teacher) => (
-                    <TeacherCard key={teacher._id} teacher={teacher} />
-                  ))
-                )}
-              </div>
+        {!selectedClassId ? (
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="text-center py-12 text-gray-500">
+              Please select a class to view its timetable
             </div>
           </div>
-
-          {/* Timetable Grid */}
-          <div className="lg:col-span-3">
-            <div className="bg-white rounded-xl shadow-lg p-6 overflow-x-auto">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-6 pb-3 border-b-2 border-blue-500">
-                Weekly Timetable
-              </h2>
-              {!selectedClassId ? (
-                <div className="text-center py-12 text-gray-500">
-                  Please select a class to view its timetable
+        ) : (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+              {/* Teachers Sidebar */}
+              <div className="lg:col-span-1">
+                <div className="bg-white rounded-xl shadow-lg p-6 sticky top-4">
+                  <h2 className="text-2xl font-semibold text-gray-800 mb-4 pb-3 border-b-2 border-purple-500">
+                    Teachers
+                  </h2>
+                  <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+                    {teachers.length === 0 ? (
+                      <p className="text-gray-500 text-center py-4 text-sm">
+                        No teachers available
+                      </p>
+                    ) : (
+                      teachers.map((teacher) => (
+                        <TeacherCard key={teacher._id} teacher={teacher} />
+                      ))
+                    )}
+                  </div>
                 </div>
-              ) : (
-                <DndContext
-                  sensors={sensors}
-                  collisionDetection={closestCenter}
-                  onDragStart={handleDragStart}
-                  onDragEnd={handleDragEnd}
-                >
+              </div>
+
+              {/* Timetable Grid */}
+              <div className="lg:col-span-3">
+                <div className="bg-white rounded-xl shadow-lg p-6 overflow-x-auto">
+                  <h2 className="text-2xl font-semibold text-gray-800 mb-6 pb-3 border-b-2 border-blue-500">
+                    Weekly Timetable
+                  </h2>
                   <div className="overflow-x-auto">
                     <table className="w-full border-collapse">
                       <thead>
@@ -386,23 +385,23 @@ function Timetable() {
                       </tbody>
                     </table>
                   </div>
-                  <DragOverlay>
-                    {draggedTeacher ? (
-                      <div className="bg-gradient-to-r from-indigo-100 to-purple-100 p-4 rounded-lg shadow-xl border-2 border-indigo-400 opacity-90">
-                        <div className="font-semibold text-sm text-gray-800">
-                          {draggedTeacher.name}
-                        </div>
-                        <div className="text-xs text-gray-600 mt-1">
-                          {draggedTeacher.email}
-                        </div>
-                      </div>
-                    ) : null}
-                  </DragOverlay>
-                </DndContext>
-              )}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+            <DragOverlay>
+              {draggedTeacher ? (
+                <div className="bg-gradient-to-r from-indigo-100 to-purple-100 p-4 rounded-lg shadow-xl border-2 border-indigo-400 opacity-90">
+                  <div className="font-semibold text-sm text-gray-800">
+                    {draggedTeacher.name}
+                  </div>
+                  <div className="text-xs text-gray-600 mt-1">
+                    {draggedTeacher.email}
+                  </div>
+                </div>
+              ) : null}
+            </DragOverlay>
+          </DndContext>
+        )}
       </div>
     </div>
   );
