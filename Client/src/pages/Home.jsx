@@ -16,7 +16,7 @@ function Home() {
 
   const fetchClass = async () => {
     try {
-      const response = await fetch("http://schoolscheduling-production.up.railway.app/api/class");
+      const response = await fetch("https://schoolscheduling-production.up.railway.app/api/class");
       const data = await response.json();
       setClasses(data);
     } catch (error) {
@@ -26,7 +26,7 @@ function Home() {
 
   const fetchTeacher = async () => {
     try {
-      const response = await fetch("http://schoolscheduling-production.up.railway.app/api/teacher");
+      const response = await fetch("https://schoolscheduling-production.up.railway.app/api/teacher");
       const data = await response.json();
       setTeachers(data);
     } catch (error) {
@@ -58,7 +58,7 @@ function Home() {
   const handleClassSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://schoolscheduling-production.up.railway.app/api/class", {
+      const response = await fetch("https://schoolscheduling-production.up.railway.app/api/class", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +76,7 @@ function Home() {
   const handleTeacherSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://schoolscheduling-production.up.railway.app/api/teacher", {
+      const response = await fetch("https://schoolscheduling-production.up.railway.app/api/teacher", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +93,7 @@ function Home() {
 
   const handleClassDelete = async (id) => {
     try {
-      const response = await fetch(`http://schoolscheduling-production.up.railway.app/api/class/${id}`, {
+      const response = await fetch(`https://schoolscheduling-production.up.railway.app/api/class/${id}`, {
         method: "DELETE",
       });
       if (response.ok) {
@@ -106,7 +106,7 @@ function Home() {
 
   const handleTeacherDelete = async (id) => {
     try {
-      const response = await fetch(`http://schoolscheduling-production.up.railway.app/api/teacher/${id}`, {
+      const response = await fetch(`https://schoolscheduling-production.up.railway.app/api/teacher/${id}`, {
         method: "DELETE",
       });
       if (response.ok) {

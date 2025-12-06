@@ -133,7 +133,7 @@ function Timetable() {
 
   const fetchClasses = async () => {
     try {
-      const response = await fetch("http://schoolscheduling-production.up.railway.app/api/class");
+      const response = await fetch("https://schoolscheduling-production.up.railway.app/api/class");
       const data = await response.json();
       setClasses(data);
       if (data.length > 0 && !selectedClassId) {
@@ -146,7 +146,7 @@ function Timetable() {
 
   const fetchTeachers = async () => {
     try {
-      const response = await fetch("http://schoolscheduling-production.up.railway.app/api/teacher");
+      const response = await fetch("https://schoolscheduling-production.up.railway.app/api/teacher");
       const data = await response.json();
       setTeachers(data);
     } catch (error) {
@@ -158,7 +158,7 @@ function Timetable() {
     if (!selectedClassId) return;
     try {
       const response = await fetch(
-        `http://schoolscheduling-production.up.railway.app/api/timetable/class/${selectedClassId}`
+        `https://schoolscheduling-production.up.railway.app/api/timetable/class/${selectedClassId}`
       );
       const data = await response.json();
       // Create a map for quick lookup: `${day}|${period}` -> entry
@@ -212,7 +212,7 @@ function Timetable() {
     const teacherId = active.id;
 
     try {
-      const response = await fetch("http://schoolscheduling-production.up.railway.app/api/timetable", {
+      const response = await fetch("https://schoolscheduling-production.up.railway.app/api/timetable", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -240,7 +240,7 @@ function Timetable() {
   const handleDelete = async (entryId) => {
     try {
       const response = await fetch(
-        `http://schoolscheduling-production.up.railway.app/api/timetable/${entryId}`,
+        `https://schoolscheduling-production.up.railway.app/api/timetable/${entryId}`,
         {
           method: "DELETE",
         }
